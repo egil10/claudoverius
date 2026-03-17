@@ -69,6 +69,8 @@ $\ket{+}\otimes\ket{0}$ & Product (superposition) & 0.000 \\
 \label{tab:entanglement-entropy-states}
 \end{table}
 
+The entropy $\mathcal{S}=1$ bit for all four Bell states confirms they are maximally entangled: no local description of either qubit alone can capture the full state. Measuring one qubit instantly fixes the outcome of the other, regardless of the basis. For the product states $\ket{00}$ and $\ket{+}\otimes\ket{0}$, the entropy vanishes exactly. The superposition state $\ket{+}\otimes\ket{0}$ is instructive: even though qubit $A$ is in a superposition, the two qubits carry no correlations with each other, and the reduced density matrix of either subsystem is already pure. This underscores that von Neumann entropy measures entanglement, not superposition or classical uncertainty.
+
 \subsection{Two-Level System: Exact Diagonalization vs.\ VQE}
 \label{subsec:two-level-vqe}
 
@@ -172,7 +174,11 @@ The von Neumann entropy is computed for all four eigenstates, not just the groun
     \label{fig:part-d_entropy}
 \end{figure}
 
-Some key observations; (i) zero entropy, where at $\lambda=0$ all eigenstates are computational basis states (product states), so $\mathcal{S}=0$; (ii) monotonic increase, where as $\lambda$ grows the off-diagonal interaction mixes the basis states, generating entanglement and the entropy increases smoothly; (iii) sharp jump at the avoided crossing, near the avoided crossing region, the entropy shows a rapid increase, the ground state transitions from being dominated by a single basis state to being strongly entangled superposition, a small change in $\lambda$ produces a dramatic shift in quantum correlations, (iv) Hamiltonian-driven entanglement, the entanglement is not externally imposed, it emerges directly from the competition between the diagonal spacing and the off-diagonal coupling $H_x$, when the coupling becomes comparable to the energy gap, entanglement grows sharply. 
+At $\lambda=0$ all eigenstates coincide with the computational basis states and carry no bipartite correlations, so $\mathcal{S}=0$ exactly. As $\lambda$ grows, the off-diagonal $\sigma_x\otimes\sigma_x$ coupling mixes the basis states within each $2\times2$ block, generating entanglement that increases smoothly with interaction strength.
+
+The most striking feature is the sharp entropy spike near the avoided crossings. At these points the eigenstate character undergoes a rapid transition — the ground state shifts from being dominated by a single product state to being a strongly entangled superposition of two. A small change in $\lambda$ near the crossing therefore produces a disproportionate change in quantum correlations. This is not a numerical artifact; it is a direct consequence of the near-degeneracy at the level repulsion, where the two hybridizing states contribute roughly equally to the eigenstate and maximise the bipartite entropy.
+
+The entanglement is entirely Hamiltonian-driven. It is not imposed externally but emerges from the competition between the diagonal energy spacings $\epsilon_{ij}$ and the off-diagonal coupling $H_x$. When $\lambda H_x$ becomes comparable to the gap between two levels, the corresponding eigenstates can no longer be written as product states and the von Neumann entropy rises sharply. The entropy is therefore a sensitive diagnostic of the balance between single-particle energies and interaction strength, and its peak coincides precisely with the strongest level mixing seen in \cref{fig:part-d_eigenvalues}.
 
 The non-interacting Hamiltonian $\mathcal{H}_0=\text{diag}\left(\epsilon_{00},\space \epsilon_{01},\space \epsilon_{10},\space \epsilon_{11}\right)$ is decomposed into four Pauli strings, as seen in \cref{four-pauli-string}, with $h_0=4.0,\space h_1=-0.75,\space h_2=-2.75,\space h_3=-0.5$. The interaction adds $(h_3+\lambda\mathcal{H}_z),\space ZZ+\lambda\mathcal{H}_x,\space XX$, giving $5$ Pauli terms total.
 \begin{equation}\label{four-pauli-string}
@@ -249,7 +255,9 @@ For $J=2$, four-qubit mapping.
 
 $$\boxed{H_{J=2} = \frac{\varepsilon}{2}\sum_{i=1}^{4} Z_i + \frac{V}{2}\sum_{i<j}(X_i X_j - Y_i Y_j)}$$
 
-This gives $4$ single-qubit $Z$ terms and $12$ two-qubit terms ($XX$ and $YY$ for each of the $6$ pairs), totalling $16$ Pauli-strings. The $16\times16$ Hilbert space contains $J=0,1,2$ sectors. The five $J=2$ eigenvalues were extracted from the full Pauli spectrum and verified against the quasispin reference. The eigenvalues are computed over $V\in[0,1.5]$ with $\epsilon=1$ and $W=0$.
+This gives $4$ single-qubit $Z$ terms and $12$ two-qubit terms ($XX$ and $YY$ for each of the $6$ pairs), totalling $16$ Pauli strings. The $16\times16$ Hilbert space contains $J=0,1,2$ sectors. The five $J=2$ eigenvalues were extracted from the full Pauli spectrum and verified against the quasispin reference. The eigenvalues are computed over $V\in[0,1.5]$ with $\epsilon=1$ and $W=0$.
+
+The simplification $W=0$ removes the $H_2$ term, which physically corresponds to a scattering process that conserves the total number of particles in each level individually, in contrast to the $V$ term that scatters pairs across levels. Including $W\neq0$ would add additional $XX+YY$ Pauli strings to the Hamiltonian, enrich the spectral structure, and is expected to further complicate the VQE optimization landscape. It is treated as a natural extension beyond the scope of the present study.
 
 \begin{figure}[!htbp]
     \centering
@@ -321,7 +329,11 @@ With this we find a maximum error of $\approx10^{-11}$ and $\approx10^{-2}$ for 
 
 For the $J=1$ system, the two-qubit $R_y$-CZ-$R_y$ ansatz achieves near-exact accuracy. The low dimensionality of the problem and the block structure of the Lipkin Hamiltonian mean the variational landscape is smooth, and BFGS converges reliably to the global minimum.
 
-For the $J=2$ system, the larger Hilbert space and the more intricate entanglement structure make optimization considerably harder. The residual error of $\approx10^{-2}$ suggests that the hardware-efficient ansatz with depth $4$ and $16$ parameters does not fully capture all correlations in the ground state. Increasing the circuit depth, adding more entanglement layers, or using a symmetry-adapted ansatz that explicitly targets the $J=2$ sector could reduce this error.
+For the $J=2$ system the residual error of $\approx10^{-2}$ is substantially larger and reflects several compounding difficulties. First, the full $16\times16$ qubit Hilbert space contains three symmetry sectors ($J=0,1,2$); the hardware-efficient ansatz imposes no symmetry constraint, so the optimizer must implicitly discover the correct sector from the energy landscape alone. This increases the effective search space and makes convergence to the true $J=2$ ground state less reliable. In practice, the optimized state may be a mixture of sectors or a local minimum in the $J=0$ or $J=1$ region that happens to have a lower apparent energy than the true $J=2$ ground state for some parameter values.
+
+Second, the error is not uniform across the $V$ range: it grows near the phase transition at $V_c\approx0.333$, where the ground state character changes rapidly and the energy landscape becomes flat around the crossing point. Near-flat landscapes cause gradient-based optimizers to stall, leading to poor convergence in exactly the regime of greatest physical interest.
+
+Third, with $16$ parameters and a circuit of depth $4$, the optimization landscape exhibits the signatures of the barren plateau problem — gradients of the cost function become exponentially small in regions of parameter space that are far from the solution, making it difficult for gradient-based methods to find a productive direction. The four random restarts partially compensate for this, but they are not sufficient to guarantee global convergence in all cases.
 
 Both systems capture the qualitative behavior of the phase transition: the ground state energy decreases with increasing $V$, and the transition from weak to strong coupling is reflected in a change in the rate of energy decrease. The Hartree-Fock approximation correctly predicts the ground state below the critical coupling but underestimates correlation energy above it, consistent with the scaling analysis in \cref{fig:part-f_scaling}.
 
