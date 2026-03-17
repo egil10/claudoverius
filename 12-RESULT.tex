@@ -152,7 +152,7 @@ An independent VQE-implementation using \texttt{Qiskit}'s \texttt{SparsePauliOp}
 \subsection{Two-Qubit System and Interaction-Driven Entanglement}
 \label{subsec:two-qubit-entanglement}
 
-The two-qubit Hamiltonian with parameters $H_x=2.0,\space H_z=3.0,\space \epsilon_{00}=0.0,\space \epsilon_{10}=2.5,\space \epsilon_{01}=2.5,\space \epsilon_{11}=7.0$ is diagonalized over $\lambda\in[0,1]$.
+The two-qubit Hamiltonian with parameters $H_x=2.0,\space H_z=3.0,\space \epsilon_{00}=0.0,\space \epsilon_{10}=2.5,\space \epsilon_{01}=6.5,\space \epsilon_{11}=7.0$ is diagonalized over $\lambda\in[0,1]$.
 
 \begin{figure}[H]
     \centering
@@ -161,7 +161,7 @@ The two-qubit Hamiltonian with parameters $H_x=2.0,\space H_z=3.0,\space \epsilo
     \label{fig:part-d_eigenvalues}
 \end{figure}
 
-At $\lambda=0$ the eigenvalues are the non-interacting energies $0.0,\space 2.5,\space 6.5,\space 7.0$. As $\lambda$ increases, the $\sigma_x\otimes\sigma_x$ interaction shifts the diagonal elements, pushing $\ket{00}$ and $\ket{11}$ up while pulling $\ket{01}$ and $\ket{10}$ down. The $\sigma_x\otimes\sigma_x$ coupling creates off-diagonal mixing between $\ket{00}\leftrightarrow\ket{11}$ and $\ket{01}\leftrightarrow\ket{10}$ producing avoided crossings. the block structure of the Hamiltonian, two independent $2\times2$ blocks, is reflected in the pairwise behaviours of the energy levels.
+At $\lambda=0$ the eigenvalues are the non-interacting energies $0.0,\space 2.5,\space 6.5,\space 7.0$. As $\lambda$ increases, the $\sigma_z\otimes\sigma_z$ interaction shifts the diagonal elements, pushing $\ket{00}$ and $\ket{11}$ up while pulling $\ket{10}$ and $\ket{01}$ down. The $\sigma_x\otimes\sigma_x$ coupling then creates off-diagonal mixing between $\ket{00}\leftrightarrow\ket{11}$ and $\ket{01}\leftrightarrow\ket{10}$, producing avoided crossings. The block structure of the Hamiltonian, two independent $2\times2$ blocks, is reflected in the pairwise behaviour of the energy levels.
 
 The von Neumann entropy is computed for all four eigenstates, not just the ground state. 
 
@@ -174,7 +174,7 @@ The von Neumann entropy is computed for all four eigenstates, not just the groun
 
 Some key observations; (i) zero entropy, where at $\lambda=0$ all eigenstates are computational basis states (product states), so $\mathcal{S}=0$; (ii) monotonic increase, where as $\lambda$ grows the off-diagonal interaction mixes the basis states, generating entanglement and the entropy increases smoothly; (iii) sharp jump at the avoided crossing, near the avoided crossing region, the entropy shows a rapid increase, the ground state transitions from being dominated by a single basis state to being strongly entangled superposition, a small change in $\lambda$ produces a dramatic shift in quantum correlations, (iv) Hamiltonian-driven entanglement, the entanglement is not externally imposed, it emerges directly from the competition between the diagonal spacing and the off-diagonal coupling $H_x$, when the coupling becomes comparable to the energy gap, entanglement grows sharply. 
 
-The non-interacting Hamiltonian $\mathcal{H}_0=\text{diag}\left(\epsilon_{00},\space \epsilon_{01},\space \epsilon_{10},\space \epsilon_{11}\right)$ is decomposed into four Pauli strings, as seen in \cref{four-pauli-string}, with $h_0=4.0,\space h_1=0.25,\space h_2=-2.75,\space h_3=-0.5$. The interaction adds $(h_3+\lambda\mathcal{H}_z),\space ZZ+\lambda\mathcal{H}_x,\space XX$, giving $5$ Pauli terms total.
+The non-interacting Hamiltonian $\mathcal{H}_0=\text{diag}\left(\epsilon_{00},\space \epsilon_{01},\space \epsilon_{10},\space \epsilon_{11}\right)$ is decomposed into four Pauli strings, as seen in \cref{four-pauli-string}, with $h_0=4.0,\space h_1=-0.75,\space h_2=-2.75,\space h_3=-0.5$. The interaction adds $(h_3+\lambda\mathcal{H}_z),\space ZZ+\lambda\mathcal{H}_x,\space XX$, giving $5$ Pauli terms total.
 \begin{equation}\label{four-pauli-string}
     \mathcal{H}_0 = h_0\, II + h_1\, ZI + h_2\, IZ + h_3\, ZZ
 \end{equation}
@@ -208,7 +208,7 @@ BFGS converges reliably from the zero-parameter initialization $\theta=(0,0,0,0)
 
 The exact match between the manual implementation and Qiskit validates the VQE-code, both correctly handle the ansatz, Pauli measurements, and optimization loop.
 
-The VQE implicitly captures the entanglement structure of the ground state, as $\lambda$ increases through the crossing region, the optimal CNOT angle changes to produce the appropriate entanglement, tracked by the entropy analysis from the first part. 
+The VQE implicitly captures the entanglement structure of the ground state: as $\lambda$ increases through the crossing region, the optimal $R_y$ rotation angles shift so that the CNOT gate produces the appropriate degree of entanglement, consistent with the entropy growth tracked in the first part of this subsection. 
 
 \subsection{The Lipkin Model}
 \label{subsec:lipkin-model}
@@ -303,7 +303,7 @@ $J=2$ & 4 & 4 & 16 & 4 & L-BFGS-B \\
 \label{tab:vqe-circuit-config}
 \end{table}
 
-The ansatz uses alternating entanglement layers, even pairs $(1,0),\space(2,3)$ and odd pairs $(1,2),\space(3,4)$ plus wrap-around to ensure full qubit connectivity after two layers. Multiple random restarts mitigate local minima. 
+The ansatz uses alternating CZ entanglement layers: even layers entangle pairs $(0,1)$ and $(2,3)$, while odd layers entangle $(1,2)$ and $(3,4)$ plus a wrap-around $(0,3)$ link to ensure full qubit connectivity after two layers. Multiple random restarts mitigate local minima. 
 
 \begin{figure}[H]
     \centering

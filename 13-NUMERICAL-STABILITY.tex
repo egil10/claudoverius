@@ -45,4 +45,4 @@ in agreement with the observed standard deviation of $\sigma\approx0.018$. This 
 
 \subsection{Reproducibility}
 
-All random restarts in the VQE experiments use a fixed random seed for reproducibility. The optimizer tolerances were set to \texttt{ftol=$10^{-12}$} and \texttt{gtol=$10^{-8}$} for L-BFGS-B. No catastrophic cancellation or overflow was encountered in any of the experiments, and all results were verified to be stable under repeated runs.
+All random restarts in the VQE experiments use a fixed random seed (\texttt{42}) for reproducibility, with random initial parameters drawn uniformly from $[-\pi,\pi]$. Default \texttt{scipy.optimize} tolerances were used throughout; no explicit convergence thresholds were set beyond the optimizer defaults. No catastrophic cancellation or overflow was encountered in any of the experiments, and all results were verified to be stable under repeated runs.
