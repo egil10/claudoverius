@@ -3,11 +3,45 @@
 \subsection{Summary of Findings}
 \label{subsec:conclusion-summary}
 
+This project studied the Lipkin--Meshkov--Glick model and a sequence of preparatory Hamiltonians using both classical diagonalization and the Variational Quantum Eigensolver (VQE). The main findings can be summarized as follows.
+
+For single-qubit operations and Bell states (Part a), we confirmed that the Pauli matrices, Hadamard gate, and phase gate act as theoretically expected. The Bell state $\ket{\Phi^+}$ was successfully prepared using a $H\otimes\mathbf{I}$ followed by a CNOT gate, and repeated measurements at $1000$ shots per run reproduced the ideal $50$/$50$ outcome distribution with statistical fluctuations consistent with binomial shot noise. The von Neumann entropy correctly distinguished maximally entangled Bell states ($\mathcal{S}=1$) from product states ($\mathcal{S}=0$).
+
+For the two-level Hamiltonian (Parts b--c), classical diagonalization achieved machine-precision agreement with the analytical eigenvalues ($\approx10^{-15}$). An avoided crossing was identified at $\lambda=\frac{2}{3}$, where the ground state character transitions from $\ket{0}$-dominated to $\ket{1}$-dominated. The VQE with a single $R_y$ rotation reproduced both eigenvalues to $\approx10^{-11}$ across the full $\lambda$ range, confirming that the $R_y$ ansatz is exactly expressive for this real symmetric Hamiltonian.
+
+For the two-qubit Hamiltonian (Parts d--e), exact diagonalization revealed pairwise avoided crossings and a monotonically increasing von Neumann entropy driven entirely by the off-diagonal $\sigma_x\otimes\sigma_x$ interaction. The entropy undergoes a sharp rise near the crossing region, demonstrating that entanglement is a direct consequence of competition between the diagonal energy spacing and the interaction strength. The four-parameter $R_y$-CNOT-$R_y$ ansatz spans the full real two-qubit Hilbert space and matched the exact ground state energy to $\approx10^{-10}$, with identical results from the independent Qiskit implementation.
+
+For the Lipkin model (Parts f--g), classical diagonalization of the $J=1$ ($3\times3$) and $J=2$ ($5\times5$) Hamiltonians confirmed the expected ground state energy decrease with increasing interaction strength $V$. The Hartree-Fock approximation was found to be exact below the critical coupling $V_c$ but systematically overestimates the energy above it, with convergence to the exact result as $N$ increases. VQE achieved near-machine-precision accuracy for $J=1$ ($\approx10^{-11}$), while the $J=2$ system showed a residual error of $\approx10^{-2}$ due to a more complex optimization landscape in the larger Hilbert space.
+
 \subsection{Critique}
 \label{subsec:conclusion-critique}
+
+The project is structured well and covers all required parts, but several limitations are worth noting.
+
+The hardware-efficient ansatz used for the Lipkin $J=2$ system does not exploit the $\mathrm{SU}(2)$ symmetry of the Hamiltonian. A symmetry-adapted ansatz that operates directly within the $J=2$ sector would reduce the effective search space from $2^4=16$ dimensions to $5$ dimensions, likely improving both precision and convergence speed. The current approach relies on the optimizer to implicitly find the correct symmetry sector, which is inefficient and explains the larger residual error.
+
+All simulations were performed using exact statevector simulation, which is noiseless and bypasses the challenges of real quantum hardware. On actual NISQ devices, gate errors, decoherence, and readout noise would significantly degrade precision, particularly for the deeper $J=2$ circuit. The results presented here therefore represent an upper bound on what can be achieved without error mitigation.
+
+The use of multiple random restarts to mitigate local minima is a heuristic rather than a guarantee of global convergence. More principled approaches, such as the parameter shift rule for gradient computation, SPSA, or global optimizers, could improve robustness.
 
 \subsection{Reflections}
 \label{subsec:conclusion-reflections}
 
+This project provided a concrete introduction to the variational quantum eigensolver in a setting where exact solutions are available for comparison. Working through the progression from single-qubit operations to multi-particle Hamiltonians made the abstract formalism of quantum computing tangible: the relationship between entanglement and the off-diagonal coupling strength, the role of the ansatz in determining both expressibility and optimization difficulty, and the way Pauli decomposition translates a physical Hamiltonian into a form measurable on a quantum circuit.
+
+A particularly striking result was how cleanly the VQE reproduced exact energies for the simpler systems — errors at the level of $10^{-11}$ — while hitting a real wall for $J=2$ at $10^{-2}$. This transition from trivial to genuinely hard optimization reflects the barren plateau and local minima problems that are active research challenges in quantum machine learning.
+
+The comparison between the manual VQE implementation and the Qiskit-based one provided a useful cross-validation. Having two independent implementations agree to $10^{-10}$ builds confidence in both, and the exercise of mapping the Pauli decomposition, measurement basis rotations, and optimization loop manually was instructive.
+
 \subsection{Future Work}
 \label{subsec:conclusion-future-work}
+
+Several natural extensions of this project suggest themselves.
+
+The most immediate improvement would be a symmetry-adapted VQE for the $J=2$ Lipkin system, using a circuit that is constrained to the $J=2$ sector from the outset. This would likely resolve the $\approx10^{-2}$ precision gap and scale more favorably to larger $N$.
+
+The $W\neq0$ term in the full Lipkin Hamiltonian was not explored here. Including the $W$ term introduces $H_2$ scattering processes and breaks the simple pair-scattering picture, making the Hamiltonian richer and the VQE more challenging.
+
+Testing the implementation on actual quantum hardware — for instance through the IBM Quantum network via Qiskit — would expose the effect of gate noise, decoherence, and readout errors. Pairing this with zero-noise extrapolation or probabilistic error cancellation would be a natural follow-up.
+
+Finally, scaling the Lipkin VQE beyond $N=4$ particles ($J>2$) would probe the boundary between tractable and intractable variational optimization on near-term devices, and would allow a more systematic study of how the VQE error scales with system size.
