@@ -2,7 +2,7 @@
 
 \subsection{Initial definitions}
 
-First, we introduce some basic components as part of QML. One-qubit bases $\ket{0}$ and $\ket{1}$ are defined in \cref{single-qubits}.
+First, I introduce some basic components as part of QML. One-qubit bases $\ket{0}$ and $\ket{1}$ are defined in \cref{single-qubits}.
 
 \begin{equation}\label{single-qubits}
     \ket{0} = \begin{pmatrix}
@@ -13,7 +13,7 @@ First, we introduce some basic components as part of QML. One-qubit bases $\ket{
     \end{pmatrix}
 \end{equation}
 
-Using these one-qubit bases, we can write quantum states as a linear combination as shown in \cref{quantum-states}, or using the Bloch-sphere representation rewritten as in \cref{bloch-sphere}
+Using these one-qubit bases, I can write quantum states as a linear combination as shown in \cref{quantum-states}, or using the Bloch-sphere representation rewritten as in \cref{bloch-sphere}
 \begin{equation}\label{quantum-states}
     \ket{\psi} = \alpha\ket{0}+\beta\ket{1}
 \end{equation}
@@ -160,7 +160,7 @@ Any $2\times2$ Hamiltonian can be expressed using the Pauli operator basis toget
     \mathcal{E}=\frac{E_1+E_2}{2} \quad \Omega=\frac{E_1-E_2}{2}
 \end{equation}
 
-Now, we can move on to the analytical eigenvalue solution, where the eigenvalues of the Hamiltonian are obtained from the characteristic equation in \cref{characteristic-equation}.
+Now, I can move on to the analytical eigenvalue solution, where the eigenvalues of the Hamiltonian are obtained from the characteristic equation in \cref{characteristic-equation}.
 \begin{equation}\label{characteristic-equation}
     \det(\mathcal{H}-E\textbf{I})=0
 \end{equation}
@@ -266,3 +266,7 @@ The full implementation and supporting code are available in the project reposit
 \subsection{Use of AI-assisted development tools}
 
 AI-assisted programming tools were used during development for code generation, debugging, and documentation. These included large language models such as \texttt{ChatGPT} \parencite{chatgpt}, \texttt{Claude} \parencite{claude}, \texttt{Grok} \parencite{grok}, and \texttt{Gemini} \parencite{gemini}, as well as coding assistants such as \texttt{GitHub Copilot}, \texttt{Antigravity} and \texttt{Cursor} \parencite{copilot,google-antigravity,cursor}. 
+
+In writing this report, I downloaded \texttt{Claude Code} from Anthropic for the first time \parencite{anthropic_claude_code_docs}. This let me use an AI agent directly in my computer terminal. Moreso, I found that syncing the \texttt{Overleaf} \LaTeX project to \texttt{GitHub} and allowing \texttt{Claude Code} to access those Tex file, let me receive direct feedback from the AI agent. 
+
+\subsection{Circuits}
