@@ -219,14 +219,14 @@ The VQE implicitly captures the entanglement structure of the ground state: as $
 \subsection{The Lipkin Model}
 \label{subsec:lipkin-model}
 
-The Lipkin Hamiltonian is built using the quasispin operators $J_z,\space J_+,\space J_-$ with the pair-scattering interaction $(W=0)$, where the resulting matrices are shown for $J=1$ with $N=2$ particles and $3\times3$ in \cref{h_j=1_matrix} and $J=2$ with $N=4$ particles and $5\times5$ in \cref{h_j=2_matrix}.
+The full Lipkin Hamiltonian including both the pair-scattering term ($V$) and the monopole term ($W$) is constructed from the quasispin operators $J_z,\space J_+,\space J_-$. The resulting matrices are shown for $J=1$ with $N=2$ particles ($3\times3$) in \cref{h_j=1_matrix} and $J=2$ with $N=4$ particles ($5\times5$) in \cref{h_j=2_matrix}.
 
-The $m=0$ state is decoupled, it is an eigenstate with energy $0$ for all $V$. The interaction only connects $m=-1 \leftrightarrow m=+1$, the $\Delta m = \pm 2$ selection rule from $J_+^2+J_-^2$.
+The pair-scattering term $V$ only connects $m \leftrightarrow m\pm2$ states (the $\Delta m = \pm 2$ selection rule from $J_+^2+J_-^2$), so the $m=0$ state is decoupled from the $V$ interaction for all $V$. The $W$ term, however, contributes a diagonal shift: for $J=1$ it raises the $m=0$ energy by $W$, and for $J=2$ it shifts the odd-$m$ states by $3W$ and the $m=0$ state by $4W$, as visible in the matrices below.
 
 \begin{equation}\label{h_j=1_matrix}
     H_{J=1} = \begin{pmatrix}
         -\epsilon & 0 & -V \\
-        0 & 0 & 0 \\
+        0 & W & 0 \\
         -V & 0 & \epsilon
     \end{pmatrix}
 \end{equation}
@@ -244,20 +244,19 @@ The chequerboard pattern $\Delta m = \pm 2$ persists, decoupling even-$m$ and od
     \end{pmatrix}
 \end{equation}
 
-Mapping the quasispin operators to $N=2$ qubits gives 
+Mapping the quasispin operators to $N=2$ qubits gives the full two-qubit Hamiltonian
 \begin{equation}
-    H_{J=1}=\frac{\epsilon}{2}(ZI+IZ)+\frac{V}{2}(XX-YY)
+    H_{J=1}=\frac{\epsilon}{2}(ZI+IZ)+\frac{V+W}{2}\,XX+\frac{W-V}{2}\,YY
 \end{equation}
 
-For $J=1$, two-qubit mapping. The $4\times4$ Pauli Hamiltonian contains both the $J=1$ tripled $d=3$ and $J=0$ singlet $d=1$. Projecting onto the triplet subspace, spanned by $\ket{11}$ $(m=-1)$, $\frac{\ket{01}+\ket{10}}{\sqrt{2}}$ $(m=0)$ and $\ket{00}$ $(m=+1)$ exactly covers the $3\times3$ quasispin matrix.
+The $4\times4$ Pauli representation contains both the $J=1$ triplet ($d=3$) and the $J=0$ singlet ($d=1$). Projecting onto the triplet subspace, spanned by $\ket{11}$ $(m=-1)$, $\frac{1}{\sqrt{2}}(\ket{01}+\ket{10})$ $(m=0)$, and $\ket{00}$ $(m=+1)$, exactly reproduces the $3\times3$ quasispin matrix in \cref{h_j=1_matrix}, including the $W$ shift on the $m=0$ diagonal.
 
-For $J=2$, four-qubit mapping. 
+For $J=2$, four-qubit mapping:
+$$\boxed{H_{J=2} = \frac{\varepsilon}{2}\sum_{i=1}^{4} Z_i + \sum_{i<j}\left(\frac{V+W}{2}\,X_i X_j + \frac{W-V}{2}\,Y_i Y_j\right)}$$
 
-$$\boxed{H_{J=2} = \frac{\varepsilon}{2}\sum_{i=1}^{4} Z_i + \frac{V}{2}\sum_{i<j}(X_i X_j - Y_i Y_j)}$$
+This gives $4$ single-qubit $Z$ terms and $12$ two-qubit interaction terms ($XX$ and $YY$ for each of the $6$ pairs), totalling $16$ Pauli strings regardless of $W$. The $W$ term modifies the coefficients of the existing strings rather than introducing new ones. The $16\times16$ Hilbert space contains $J=0,1,2$ sectors; the five $J=2$ eigenvalues were extracted from the full Pauli spectrum and verified against the quasispin reference at a test point ($\epsilon=1$, $V=0.5$, $W=0.2$).
 
-This gives $4$ single-qubit $Z$ terms and $12$ two-qubit terms ($XX$ and $YY$ for each of the $6$ pairs), totalling $16$ Pauli strings. The $16\times16$ Hilbert space contains $J=0,1,2$ sectors. The five $J=2$ eigenvalues were extracted from the full Pauli spectrum and verified against the quasispin reference. The eigenvalues are computed over $V\in[0,1.5]$ with $\epsilon=1$ and $W=0$.
-
-The simplification $W=0$ removes the $H_2$ term, which physically corresponds to a scattering process that conserves the total number of particles in each level individually, in contrast to the $V$ term that scatters pairs across levels. Including $W\neq0$ would add additional $XX+YY$ Pauli strings to the Hamiltonian, enrich the spectral structure, and is expected to further complicate the VQE optimization landscape. It is treated as a natural extension beyond the scope of the present study.
+The primary V-sweeps use $W=0$ as the baseline, and the Pauli decomposition with $W\neq0$ was verified to match the quasispin Hamiltonian exactly for both $J=1$ and $J=2$. Setting $W=0$ recovers the pure pair-scattering model; including $W$ breaks the residual symmetry between the $XX$ and $YY$ channels and lifts the $m=0$ degeneracy seen at $W=0$.
 
 \begin{figure}[!htbp]
     \centering
@@ -325,7 +324,7 @@ The ansatz uses alternating CZ entanglement layers: even layers entangle pairs $
     \label{fig:part-g_vqe_precision}
 \end{figure}
 
-With this we find a maximum error of $\approx10^{-11}$ and $\approx10^{-2}$ for $J=1$ ($N=2$) and $J=2$ ($N=4$) respectively, with mean errors of $\approx10^{-12}$ and $\approx10^{-3}$.
+With this we find a maximum error of $2.92\times10^{-11}$ and $1.80\times10^{-2}$ for $J=1$ ($N=2$) and $J=2$ ($N=4$) respectively, with mean errors of $\approx10^{-12}$ and $\approx10^{-3}$.
 
 For the $J=1$ system, the two-qubit $R_y$-CZ-$R_y$ ansatz achieves near-exact accuracy. The low dimensionality of the problem and the block structure of the Lipkin Hamiltonian mean the variational landscape is smooth, and BFGS converges reliably to the global minimum.
 

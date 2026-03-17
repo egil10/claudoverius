@@ -240,20 +240,22 @@ For two qubits, a common hardware-efficient architecture combines single-qubit r
 
 \subsection{The Lipkin model}
 
-The Lipkin--Meshkov--Glick (LMG) model describes $N$ fermions distributed over two $N$-fold degenerate energy levels separated by an energy $\varepsilon$. In terms of quasispin operators the Hamiltonian is written as in \cref{lipkin-hamiltonian}.
+The Lipkin--Meshkov--Glick (LMG) model describes $N$ fermions distributed over two $N$-fold degenerate energy levels separated by an energy $\varepsilon$. In terms of quasispin operators the full Hamiltonian is $\mathcal{H}=\mathcal{H}_0+\mathcal{H}_1+\mathcal{H}_2$, written as in \cref{lipkin-hamiltonian}.
 \begin{equation}\label{lipkin-hamiltonian}
-    \mathcal{H} = \varepsilon J_z + \frac{1}{2}V(J_+^2 + J_-^2)
+    \mathcal{H} = \varepsilon J_z + \frac{1}{2}V(J_+^2 + J_-^2) + \frac{1}{2}W(-N + J_+J_- + J_-J_+)
 \end{equation}
 
-The operators $J_z, J_+, J_-$ satisfy the $\mathfrak{su}(2)$ algebra and act within the angular momentum sector $J=N/2$. The first term represents the single-particle energy splitting, while the interaction term scatters particle pairs between the two levels. To simulate the model on a quantum computer, the quasispin operators are mapped to Pauli operators acting on $N$ qubits. This yields the qubit Hamiltonian shown in \cref{lipkin-pauli-hamiltonian}.
+The operators $J_z, J_+, J_-$ satisfy the $\mathfrak{su}(2)$ algebra and act within the angular momentum sector $J=N/2$. The first term $\mathcal{H}_0$ represents the single-particle energy splitting. The second term $\mathcal{H}_1$ scatters pairs of particles between the two levels ($\Delta m = \pm 2$). The third term $\mathcal{H}_2$, controlled by $W$, describes a monopole--monopole scattering that shifts states within a level without changing the level occupancy. Setting $W=0$ recovers the simpler pair-scattering model used as the primary study case.
+
+To simulate the model on a quantum computer, the quasispin operators are mapped to Pauli operators acting on $N$ qubits. This yields the qubit Hamiltonian shown in \cref{lipkin-pauli-hamiltonian}.
 \begin{equation}\label{lipkin-pauli-hamiltonian}
     \mathcal{H} =
     \frac{\varepsilon}{2}\sum_{i=1}^{N} Z_i
     +
-    \frac{V}{2}\sum_{i<j}(X_i X_j - Y_i Y_j)
+    \sum_{i<j}\left(\frac{V+W}{2}\, X_i X_j + \frac{W-V}{2}\, Y_i Y_j\right)
 \end{equation}
 
-This Pauli representation allows the Lipkin Hamiltonian to be directly evaluated within the VQE framework introduced in the following subsection.
+The $V$ and $W$ terms both contribute to the $XX$ and $YY$ Pauli strings: the pair-scattering ($V$) drives $XX-YY$ while the monopole term ($W$) drives $XX+YY$, so the combined coefficients are $(V+W)/2$ and $(W-V)/2$ respectively. Setting $W=0$ recovers the pure $XX-YY$ structure. This Pauli representation allows the full Lipkin Hamiltonian to be directly evaluated within the VQE framework.
 
 \subsection{Implementation in \texttt{python}}
 
