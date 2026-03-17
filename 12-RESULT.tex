@@ -23,7 +23,7 @@ Starting from $\ket{00}$, the circuit $H\otimes\textbf{I}$ followed by CNOT prod
 =
 \ket{\Phi^+}
 \end{equation}
-\begin{table}[h]
+\begin{table}[!htbp]
 \centering
 \begin{tabular}{ccc}
 \hline
@@ -43,7 +43,7 @@ The outcomes are exclusively $\ket{00}$ and $\ket{11}$ with equal probability, w
 \begin{equation}\label{expected-noise}
     \sqrt{\frac{p(1-p)}{N_\text{shots}}}\approx0.016
 \end{equation}
-\begin{figure}[H]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\linewidth]{figures/part-a_measurement_dist.pdf}
     \caption{Measurement outcome distribution over 50 runs of 1000 shots each, showing near-equal probabilities for $\ket{00}$ and $\ket{11}$ as expected for the $\ket{\Phi^+}$ Bell state.}
@@ -51,7 +51,7 @@ The outcomes are exclusively $\ket{00}$ and $\ket{11}$ with equal probability, w
 \end{figure}
 
 Computing the von Neumann entropy $\mathcal{S}=-\text{Tr}\left(\rho_A\log_2\rho_A\right)$ in \cref{tab:entanglement-entropy-states}. 
-\begin{table}[H]
+\begin{table}[!htbp]
 \centering
 \begin{tabular}{lcc}
 \hline
@@ -73,7 +73,7 @@ $\ket{+}\otimes\ket{0}$ & Product (superposition) & 0.000 \\
 \label{subsec:two-level-vqe}
 
 Using parameters $E_1=0,\space E_2=4,\space V_{11}=3,\space V_{22}=-3,\space V_{12}=V_{21}=0.2$ the Pauli decompositions are shown in \cref{tab:pauli-decomposition-coefficients}.
-\begin{table}[H]
+\begin{table}[!htbp]
 \centering
 \begin{tabular}{lcc}
 \hline
@@ -91,7 +91,7 @@ $\omega_x$ & $0.2$ & $V_{12}$ \\
 \end{table}
 
 The eigenvalues $E_\pm(\lambda)$ are computed both analytically and numerically (using \texttt{numpy.linalg.eigh}) over $101$ values of $\lambda\in[0,1]$, where the maximum discrepancy between the two methods are $\approx10^{-15}$, as shown in \cref{fig:figures/part-b_eigenvalues.pdf}. 
-\begin{figure}[H]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\linewidth]{figures/part-b_eigenvalues.pdf}
     \caption{Eigenvalues $E_\pm(\lambda)$ as a function of the interaction parameter $\lambda$, obtained by both analytical and numerical diagonalization. An avoided crossing occurs at $\lambda=\frac{2}{3}$.}
@@ -101,7 +101,7 @@ The eigenvalues $E_\pm(\lambda)$ are computed both analytically and numerically 
 The spectrum shows an avoided crossing at $\lambda=\frac{2}{3}$, where at this point, the diagonal matrix elements cross $\left(3\lambda=4-3\lambda\right)$, but the off-diagonal coupling $V_{12}=0.2$ prevents a true degeneracy, creating a gap of $\Delta E\approx0.27$. 
 
 Tracking the eigenvector decomposition of the ground state as a function of $\lambda$, as seen in \cref{tab:lambda-probabilities}.
-\begin{table}[H]
+\begin{table}[!htbp]
 \centering
 \begin{tabular}{cccc}
 \hline
@@ -115,7 +115,7 @@ $\tfrac{2}{3}$ & $\sim$50\% & $\sim$50\% & Maximally mixed \\
 \caption{Measurement probabilities of the computational basis states $\ket{0}$ and $\ket{1}$ as a function of the interaction parameter $\lambda$.}
 \label{tab:lambda-probabilities}
 \end{table}
-\begin{figure}[H]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\linewidth]{figures/part-b_eigenvector_mixing.pdf}
     \caption{Ground state character as a function of $\lambda$, showing the smooth transition from a $\ket{0}$-dominated state to a $\ket{1}$-dominated state through the avoided crossing.}
@@ -132,13 +132,13 @@ The trial state is shown in \cref{trial-state}, where the single-parameter rotat
 The energy is evaluated as $E(\theta)=c_0+c_z\langle\sigma_z\rangle_\theta+c_x\langle\sigma_x\rangle_\theta$ where $\langle\sigma_z\rangle$ is obtained from computational-basis measurement and $\langle\sigma_x\rangle$ requires a Hadamard rotation before measurement. 
 
 The VQE is swept over $\lambda\in[0,1]$. Both the ground state and the excited state accessed via $\theta_\text{opt}+\pi$ are computed. The VQE markers lie exactly on the exact diagonalization curves for both eigenvalues. Precision is shown in \cref{fig:part-c_vqe_spectrum_error} where the max error for the ground state is $5.41\times10^{-11}$ and excited state is same order.
-\begin{figure}[H]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\linewidth]{figures/part-c_vqe_full_spectrum.pdf}
     \caption{Full VQE spectrum showing both the ground state and excited state energies as a function of $\lambda$. VQE markers lie exactly on the exact diagonalization curves.}
     \label{fig:part-c_vqe_full_spectrum}
 \end{figure}
-\begin{figure}[H]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\linewidth]{figures/part-c_vqe_spectrum_error.pdf}
     \caption{Absolute error between the VQE energy and exact diagonalization as a function of $\lambda$, remaining below $10^{-10}$ across the full range for both ground and excited states.}
@@ -154,7 +154,7 @@ An independent VQE-implementation using \texttt{Qiskit}'s \texttt{SparsePauliOp}
 
 The two-qubit Hamiltonian with parameters $H_x=2.0,\space H_z=3.0,\space \epsilon_{00}=0.0,\space \epsilon_{10}=2.5,\space \epsilon_{01}=6.5,\space \epsilon_{11}=7.0$ is diagonalized over $\lambda\in[0,1]$.
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\linewidth]{figures/part-d_eigenvalues.pdf}
     \caption{Eigenvalues of the two-qubit Hamiltonian as a function of $\lambda$, showing pairwise avoided crossings driven by the $\sigma_x\otimes\sigma_x$ coupling.}
@@ -165,7 +165,7 @@ At $\lambda=0$ the eigenvalues are the non-interacting energies $0.0,\space 2.5,
 
 The von Neumann entropy is computed for all four eigenstates, not just the ground state. 
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\linewidth]{figures/part-d_entropy.pdf}
     \caption{Von Neumann entropy $\mathcal{S}$ for all four eigenstates as a function of $\lambda$, showing monotonic growth of entanglement with a sharp rise near the avoided crossing.}
@@ -188,14 +188,14 @@ This gives $4$ variational parameters. The $R_y$ rotations span the real subspac
 
 The VQE sweep over $\lambda\in[0,1]$ compares three approaches, in \cref{figures/part-e_vqe_comparison.pdf}, where all three curves, exact, VQE, and Qiskit VQE, are indistinguishable. With the precision, the max absolute error for manual VQE and Qiskit VQE are both $\approx 10^{-10}$. 
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\linewidth]{figures/part-e_vqe_comparison.pdf}
     \caption{Ground state energy as a function of $\lambda$ for three approaches: exact diagonalization, manual VQE, and Qiskit VQE. All three curves are indistinguishable.}
     \label{fig:part-e_vqe_comparison}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\linewidth]{figures/part-e_vqe_precision.pdf}
     \caption{Absolute error between VQE and exact diagonalization for the two-qubit model, with a maximum of $\approx10^{-10}$ across the full $\lambda$ range.}
@@ -249,18 +249,16 @@ For $J=2$, four-qubit mapping.
 
 $$\boxed{H_{J=2} = \frac{\varepsilon}{2}\sum_{i=1}^{4} Z_i + \frac{V}{2}\sum_{i<j}(X_i X_j - Y_i Y_j)}$$
 
-This gives $4$ single-qubit $Z$ terms and $12$ two-qubit terms ($XX$ and $YY$ for each of the $6$ pairs), totalling $16$ Pauli-strings. The $16\times16$ Hilbert space contains $J=0,1,2$ sectors. The five $J=2$ eigenvalues were extracted from the full Pauli spectrum and verified against the quasispin reference. 
+This gives $4$ single-qubit $Z$ terms and $12$ two-qubit terms ($XX$ and $YY$ for each of the $6$ pairs), totalling $16$ Pauli-strings. The $16\times16$ Hilbert space contains $J=0,1,2$ sectors. The five $J=2$ eigenvalues were extracted from the full Pauli spectrum and verified against the quasispin reference. The eigenvalues are computed over $V\in[0,1.5]$ with $\epsilon=1$ and $W=0$.
 
-The eigenvalues are computed over $V\in[0,1.5]$ with $\epsilon=1$ and $W=0$.
-
-\begin{figure}[H]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\linewidth]{figures/part-f_j1.pdf}
     \caption{Lipkin model eigenvalues for $J=1$ ($N=2$) as a function of $V$, with $\epsilon=1$ and $W=0$.}
     \label{fig:part-f_j1}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\linewidth]{figures/part-f_j2.pdf}
     \caption{Lipkin model eigenvalues for $J=2$ ($N=4$) as a function of $V$, with $\epsilon=1$ and $W=0$.}
@@ -278,7 +276,7 @@ E_{\text{HF}} =
 \end{cases}
 \end{equation}
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\linewidth]{figures/part-f_scaling.pdf}
     \caption{Ground state energy per particle $E_0/N$ compared with the Hartree-Fock prediction for increasing system sizes, showing convergence of HF to the exact result in the thermodynamic limit.}
@@ -289,7 +287,7 @@ The energy per particle $\frac{E_0}{N}$ approaches the Hartree-Fock curve as $N$
 
 A hardware-efficient ansatz with $R_y$ rotations and CZ entanglement is used and shown in \cref{tab:vqe-circuit-config}. 
 
-\begin{table}[H]
+\begin{table}[!htbp]
 \centering
 \begin{tabular}{cccccc}
 \hline
@@ -305,14 +303,14 @@ $J=2$ & 4 & 4 & 16 & 4 & L-BFGS-B \\
 
 The ansatz uses alternating CZ entanglement layers: even layers entangle pairs $(0,1)$ and $(2,3)$, while odd layers entangle $(1,2)$ and $(3,4)$ plus a wrap-around $(0,3)$ link to ensure full qubit connectivity after two layers. Multiple random restarts mitigate local minima. 
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\linewidth]{figures/part-g_vqe_manybody.pdf}
     \caption{VQE ground state energies for both $J=1$ and $J=2$ Lipkin systems compared with exact diagonalization over $V\in[0,1.5]$.}
     \label{fig:part-g_vqe_manybody}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
     \centering
     \includegraphics[width=\linewidth]{figures/part-g_vqe_precision.pdf}
     \caption{Absolute VQE error for the Lipkin model. The $J=1$ system achieves machine-precision accuracy ($\approx10^{-11}$), while the $J=2$ system shows a larger residual error ($\approx10^{-2}$) due to the higher-dimensional optimization landscape.}

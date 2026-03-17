@@ -11,21 +11,21 @@ For the Lipkin matrices ($3\times3$ and $5\times5$), diagonalization remains num
 
 Since all VQE experiments use exact statevector simulation rather than finite-shot sampling, the dominant sources of numerical error are the optimizer convergence tolerance and the expressibility of the chosen ansatz relative to the true ground state. \Cref{tab:vqe-precision-summary} summarizes the achieved precision across all four VQE experiments.
 
-\begin{table}[H]
+\begin{table*}[t]
 \centering
 \begin{tabular}{lcccc}
 \hline
 System & Ansatz & Optimizer & Max error & Mean error \\
 \hline
 $2\times2$ model (Part c)      & $R_y$                        & BFGS     & $5.4\times10^{-11}$ & $\sim10^{-12}$ \\
-Two-qubit model (Part e)        & $R_y$-CNOT-$R_y$             & BFGS     & $\sim10^{-10}$      & $\sim10^{-12}$ \\
-Lipkin $J=1$ (Part g)           & $R_y$-CZ-$R_y$, depth 2      & L-BFGS-B & $\sim10^{-11}$      & $\sim10^{-12}$ \\
-Lipkin $J=2$ (Part g)           & $R_y$-CZ-$R_y$, depth 4      & L-BFGS-B & $\sim10^{-2}$       & $\sim10^{-3}$  \\
+Two-qubit model (Part e)       & $R_y$-CNOT-$R_y$             & BFGS     & $\sim10^{-10}$      & $\sim10^{-12}$ \\
+Lipkin $J=1$ (Part g)          & $R_y$-CZ-$R_y$, depth 2      & L-BFGS-B & $\sim10^{-11}$      & $\sim10^{-12}$ \\
+Lipkin $J=2$ (Part g)          & $R_y$-CZ-$R_y$, depth 4      & L-BFGS-B & $\sim10^{-2}$       & $\sim10^{-3}$  \\
 \hline
 \end{tabular}
 \caption{Summary of VQE precision across all systems. Errors are absolute differences between the VQE ground state energy and the exact classical result, evaluated over the full parameter sweep.}
 \label{tab:vqe-precision-summary}
-\end{table}
+\end{table*}
 
 For the single-qubit $2\times2$ Hamiltonian, the $R_y$ ansatz spans the full real single-qubit Hilbert space, so the ansatz is exact by construction. The residual error of $\approx5.4\times10^{-11}$ reflects the BFGS convergence tolerance rather than any approximation in the trial state. The one-parameter energy landscape $E(\theta)$ is smooth and unimodal for all $\lambda$, so no local minima exist and a single optimization from $\theta=0$ reliably reaches the global minimum.
 
