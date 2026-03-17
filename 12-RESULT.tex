@@ -90,7 +90,7 @@ $\omega_x$ & $0.2$ & $V_{12}$ \\
 \label{tab:pauli-decomposition-coefficients}
 \end{table}
 
-The eigenvalues $E_\pm(\lambda)$ are computed both analytically and numerically (using \texttt{numpy.linalg.eigh}) over $101$ values of $\lambda\in[0,1]$, where the maximum discrepancy between the two methods are $\approx10^{-15}$, as shown in \cref{fig:figures/part-b_eigenvalues.pdf}. 
+The eigenvalues $E_\pm(\lambda)$ are computed both analytically and numerically (using \texttt{numpy.linalg.eigh}) over $101$ values of $\lambda\in[0,1]$, where the maximum discrepancy between the two methods are $\approx10^{-15}$, as shown in \cref{fig:part-b_eigenvalues}. 
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=\linewidth]{figures/part-b_eigenvalues.pdf}
@@ -186,7 +186,7 @@ The hardware-efficient ansatz consists of two $R_y$ rotation layers separated by
 
 This gives $4$ variational parameters. The $R_y$ rotations span the real subspace of each qubit, and the CNOT provides the entanglement needed to represent correlated states. For a $4$-dimensional real Hilbert space, $4$ real parameters are sufficient. 
 
-The VQE sweep over $\lambda\in[0,1]$ compares three approaches, in \cref{figures/part-e_vqe_comparison.pdf}, where all three curves, exact, VQE, and Qiskit VQE, are indistinguishable. With the precision, the max absolute error for manual VQE and Qiskit VQE are both $\approx 10^{-10}$. 
+The VQE sweep over $\lambda\in[0,1]$ compares three approaches, in \cref{fig:part-e_vqe_comparison}, where all three curves, exact, VQE, and Qiskit VQE, are indistinguishable. With the precision, the max absolute error for manual VQE and Qiskit VQE are both $\approx 10^{-10}$. 
 
 \begin{figure}[!htbp]
     \centering
@@ -267,7 +267,7 @@ This gives $4$ single-qubit $Z$ terms and $12$ two-qubit terms ($XX$ and $YY$ fo
 
 Both spectra show the ground state energy decreasing with increasing $V$, reflecting energetically favorable pair correlations introduced by the interaction.
 
-The Hartree-Fock energy of the Lipkin model is \cref{hartree-fock-energy} where $\tilde{V}=\frac{(N-1)V}{\epsilon}$, and the critical interaction strengths are $V_c=1.000$ for $N=2$ ($J=1$) and $V_c=0.333$ for $N=4$ ($J=2$).
+The Hartree-Fock energy of the Lipkin model is given in \cref{hartree-fock-energy}, where $\tilde{V}=\frac{(N-1)V}{\epsilon}$, and the critical interaction strengths are $V_c=1.000$ for $N=2$ ($J=1$) and $V_c=0.333$ for $N=4$ ($J=2$).
 \begin{equation}\label{hartree-fock-energy}
 E_{\text{HF}} = 
 \begin{cases}
