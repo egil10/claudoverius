@@ -46,7 +46,7 @@ H = \frac{1}{\sqrt{2}}
 S =
 \begin{pmatrix}
 1 & 0\\
-0 & -i
+0 & i
 \end{pmatrix}
 \\[12pt]
 \multicolumn{2}{c}{
@@ -192,7 +192,7 @@ np.linalg.eigh(H)
 
 \subsection{Variational Quantum Eigensolver (VQE)}
 
-VQE is based on the variational principle, for any normalised trial state $\ket{\psi(\theta)}$, the expectation value of the Hamiltonian provides an upper bound to the true ground state energy. The goal in using a VQE is therefore to minimize the energy expectation value ewith respect to the circuit parameter $\theta$ shown in \cref{minimum-expectation}. 
+VQE is based on the variational principle, for any normalised trial state $\ket{\psi(\theta)}$, the expectation value of the Hamiltonian provides an upper bound to the true ground state energy. The goal in using a VQE is therefore to minimize the energy expectation value with respect to the circuit parameter $\theta$ shown in \cref{minimum-expectation}. 
 \begin{equation}\label{minimum-expectation}
     E_0\leq\min_\theta\bra{\psi(\theta)}\mathcal{H}\ket{\psi(\theta)}
 \end{equation}
@@ -202,7 +202,7 @@ A parameterized quantum circuit $U(\theta)$ prepares a trial state from a simple
     \ket{\psi(\theta)}=U(\theta)\ket{0}^{\otimes n}
 \end{equation}
 
-To evaluate the energy on a quantum computer, the Hamiltonian is expressed as a weighted sum of tensor products of Pauli operators, in \cref{c-P-pauli}. Each term can then be measured seperately on the quantum circuit, where $c_k$ are the real coefficients and $P_k$ are Pauli strings acting on the qubits.
+To evaluate the energy on a quantum computer, the Hamiltonian is expressed as a weighted sum of tensor products of Pauli operators, in \cref{c-P-pauli}. Each term can then be measured separately on the quantum circuit, where $c_k$ are the real coefficients and $P_k$ are Pauli strings acting on the qubits.
 \begin{equation}\label{c-P-pauli}
     \mathcal{H}=\sum_k c_kP_k 
     \quad
@@ -219,8 +219,8 @@ A classical optimizer updates the circuit parameter iteratively in order to redu
     \theta_{t+1} = \theta_t - \eta\nabla_{\theta}E(\theta_t)
 \end{equation}
 
-After convergence, the optimal parameters $\theta^*$ define the approximate ground state prepared by the circuit. The estimated ground state energy is then shown in \cref{ground-staet-E}.
-\begin{equation}\label{ground-staet-E}
+After convergence, the optimal parameters $\theta^*$ define the approximate ground state prepared by the circuit. The estimated ground state energy is then shown in \cref{ground-state-E}.
+\begin{equation}\label{ground-state-E}
     E_{\text{VQE}} = E(\theta)
 \end{equation}
 
