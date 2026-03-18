@@ -12,8 +12,13 @@ Applying the Pauli operators defined in \cref{section:methods} confirms the expe
 \end{flalign}
 
 The Hadamard gate (H) maps computational basis states to equal superpositions, $H\ket{0}=\ket{+}$ and $H\ket{1}=\ket{-}$. The phase gate introduces a relative phase of $i$ on $\ket{1}$ while leaving $\ket{0}$ unchanged. In our results, both gates act as expected. 
-
-Starting from $\ket{00}$, the circuit $H\otimes\textbf{I}$ followed by CNOT produced \cref{h-otimes-I-cnot}, and with repeated measurement of $\ket{\Phi^+}$ with $50$ runs times $1000$ shots yielded the table seen in \cref{tab:measurement-probabilities}.
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.55\linewidth]{figures/circuit_bell_state.pdf}
+    \caption{Quantum circuit for the preparation of the Bell state $\ket{\Phi^+}$. The two qubits are initialized in the $\ket{00}$ state. A Hadamard gate ($H$) is applied to the first qubit, creating a superposition state. This is followed by a CNOT gate with the first qubit as the control and the second as the target, creating the maximally entangled state $\frac{1}{\sqrt{2}}(\ket{00} + \ket{11})$}
+    \label{fig:circuit-bell-state}
+\end{figure}
+Starting from $\ket{00}$, the circuit $H\otimes\textbf{I}$ followed by CNOT produced \cref{h-otimes-I-cnot}, illustrated in \cref{fig:circuit-bell-state}, and with repeated measurement of $\ket{\Phi^+}$ with $50$ runs times $1000$ shots yielded the table seen in \cref{tab:measurement-probabilities}.
 \begin{equation}\label{h-otimes-I-cnot}
 \ket{00} 
 \xrightarrow{H\otimes\textbf{I}} 
@@ -185,10 +190,16 @@ The non-interacting Hamiltonian $\mathcal{H}_0=\text{diag}\left(\epsilon_{00},\s
     \mathcal{H}_0 = h_0\, II + h_1\, ZI + h_2\, IZ + h_3\, ZZ
 \end{equation}
 
-The hardware-efficient ansatz consists of two $R_y$ rotation layers separated by a CNOT entangler
-\begin{equation}
+The hardware-efficient ansatz consists of two $R_y$ rotation layers separated by a CNOT entangler shown in \cref{ry-thetha-3} and \cref{fig:circuit-e-1idx}.
+\begin{equation}\label{ry-thetha-3}
     \ket{\psi(\theta)} = \left( R_y(\theta_3) \otimes R_y(\theta_4) \right) \cdot \text{CNOT} \cdot \left( R_y(\theta_1) \otimes R_y(\theta_2) \right) \ket{00}
 \end{equation}
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.55\linewidth]{figures/circuit_part_e_1idx.pdf}
+    \caption{Quantum circuit for the two-qubit variational ansatz. The state preparation begins with the qubits in the $\ket{00}$ state. An initial layer of parameterized single-qubit Y-rotations ($R_y(\theta_1)$ and $R_y(\theta_2)$) is applied, followed by an entangling CNOT gate. A final layer of single-qubit Y-rotations ($R_y(\theta_3)$ and $R_y(\theta_4)$) completes the circuit, generating the state $\ket{\psi(\theta)}$}
+    \label{fig:circuit-e-1idx}
+\end{figure}
 
 This gives $4$ variational parameters. The $R_y$ rotations span the real subspace of each qubit, and the CNOT provides the entanglement needed to represent correlated states. For a $4$-dimensional real Hilbert space, $4$ real parameters are sufficient. 
 
