@@ -224,19 +224,31 @@ After convergence, the optimal parameters $\theta^*$ define the approximate grou
     E_{\text{VQE}} = E(\theta)
 \end{equation}
 
-The choice of parameterized circuit $U(\theta)$ determines the family of states explored by the VQE and therefore strongly influences the quality of the variational solution. For a single qubit, a minimal ansatz consists of a single rotation gate is seen in \cref{ry-ansatz}.
+The choice of parameterized circuit $U(\theta)$ determines the family of states explored by the VQE and therefore strongly influences the quality of the variational solution. For a single qubit, a minimal ansatz consists of a single rotation gate is seen in \cref{ry-ansatz} and illustrated in \cref{fig:circuit-c}.
 \begin{equation}\label{ry-ansatz}
 \ket{\psi(\theta)} = R_y(\theta)\ket{0}
 = \cos\frac{\theta}{2}\ket{0} + \sin\frac{\theta}{2}\ket{1}.
 \end{equation}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\linewidth]{figures/circuit_part_c.pdf}
+    \caption{Minimal ansatz on a single qubit}
+    \label{fig:circuit-c}
+\end{figure}
 
-For two qubits, a common hardware-efficient architecture combines single-qubit rotations with an entangling gate. A simple example is shown in \cref{two-qubit-ansatz}.
+For two qubits, a common hardware-efficient architecture combines single-qubit rotations with an entangling gate. A simple example is shown in \cref{two-qubit-ansatz} and \cref{fig:circuit-e}.
 \begin{equation}\label{two-qubit-ansatz}
 \ket{\psi(\boldsymbol{\theta})} =
 \big(R_y(\theta_3)\otimes R_y(\theta_4)\big)
 \,\mathrm{CNOT}\,
 \big(R_y(\theta_1)\otimes R_y(\theta_2)\big)\ket{00}.
 \end{equation}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\linewidth]{figures/circuit_part_e.pdf}
+    \caption{A simple two-qubit hardware-efficient ansatz combining layers of parameterized $R_y$ rotations and a CNOT entangling gate, corresponding to \cref{two-qubit-ansatz}.}
+    \label{fig:circuit-e}
+\end{figure}
 
 \subsection{The Lipkin model}
 
@@ -267,6 +279,4 @@ The full implementation and supporting code are available in the project reposit
 
 AI-assisted programming tools were used during development for code generation, debugging, and documentation. These included large language models such as \texttt{ChatGPT} \parencite{chatgpt}, \texttt{Claude} \parencite{claude}, \texttt{Grok} \parencite{grok}, and \texttt{Gemini} \parencite{gemini}, as well as coding assistants such as \texttt{GitHub Copilot}, \texttt{Antigravity} and \texttt{Cursor} \parencite{copilot,google-antigravity,cursor}. 
 
-In writing this report, I downloaded \texttt{Claude Code} from Anthropic for the first time \parencite{anthropic_claude_code_docs}. This let me use an AI agent directly in my computer terminal. Moreso, I found that syncing the \texttt{Overleaf} \LaTeX project to \texttt{GitHub} and allowing \texttt{Claude Code} to access those Tex file, let me receive direct feedback from the AI agent. 
-
-\subsection{Circuits}
+In writing this report, I downloaded \texttt{Claude Code} from Anthropic for the first time \parencite{anthropic_claude_code_docs}. This let me use an AI agent directly in my computer terminal. Moreso, I found that syncing the \texttt{Overleaf} \LaTeX project to \texttt{GitHub} and allowing \texttt{Claude Code} to access the project's Tex files, let me receive direct feedback from the AI agent. 
