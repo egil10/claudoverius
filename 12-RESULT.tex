@@ -318,25 +318,21 @@ $J=2$ & 4 & 4 & 16 & 4 & L-BFGS-B \\
 \end{table}
 
 The ansatz uses alternating CZ entanglement layers: even layers entangle pairs $(0,1)$ and $(2,3)$, while odd layers entangle $(1,2)$ and $(3,4)$ plus a wrap-around $(0,3)$ link to ensure full qubit connectivity after two layers. Multiple random restarts mitigate local minima. 
-
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=\linewidth]{figures/part-g_vqe_manybody.pdf}
     \caption{VQE ground state energies for both $J=1$ and $J=2$ Lipkin systems compared with exact diagonalization over $V\in[0,1.5]$.}
     \label{fig:part-g_vqe_manybody}
 \end{figure}
+With this I find a maximum error of $2.92\times10^{-11}$ and $1.80\times10^{-2}$ for $J=1$ ($N=2$) and $J=2$ ($N=4$) respectively, with mean errors of $\approx10^{-12}$ and $\approx10^{-3}$.
 
+For the $J=1$ system, the two-qubit $R_y$-CZ-$R_y$ ansatz achieves near-exact accuracy. The low dimensionality of the problem and the block structure of the Lipkin Hamiltonian mean the variational landscape is smooth, and BFGS converges reliably to the global minimum.
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=\linewidth]{figures/part-g_vqe_precision.pdf}
     \caption{Absolute VQE error for the Lipkin model. The $J=1$ system achieves machine-precision accuracy ($\approx10^{-11}$), while the $J=2$ system shows a larger residual error ($\approx10^{-2}$) due to the higher-dimensional optimization landscape.}
     \label{fig:part-g_vqe_precision}
 \end{figure}
-
-With this I find a maximum error of $2.92\times10^{-11}$ and $1.80\times10^{-2}$ for $J=1$ ($N=2$) and $J=2$ ($N=4$) respectively, with mean errors of $\approx10^{-12}$ and $\approx10^{-3}$.
-
-For the $J=1$ system, the two-qubit $R_y$-CZ-$R_y$ ansatz achieves near-exact accuracy. The low dimensionality of the problem and the block structure of the Lipkin Hamiltonian mean the variational landscape is smooth, and BFGS converges reliably to the global minimum.
-
 For the $J=2$ system the residual error of $\approx10^{-2}$ is substantially larger and reflects several compounding difficulties. First, the full $16\times16$ qubit Hilbert space contains three symmetry sectors ($J=0,1,2$); the hardware-efficient ansatz imposes no symmetry constraint, so the optimizer must implicitly discover the correct sector from the energy landscape alone. This increases the effective search space and makes convergence to the true $J=2$ ground state less reliable. In practice, the optimized state may be a mixture of sectors or a local minimum in the $J=0$ or $J=1$ region that happens to have a lower apparent energy than the true $J=2$ ground state for some parameter values.
 
 Second, the error is not uniform across the $V$ range: it grows near the phase transition at $V_c\approx0.333$, where the ground state character changes rapidly and the energy landscape becomes flat around the crossing point. Near-flat landscapes cause gradient-based optimizers to stall, leading to poor convergence in exactly the regime of greatest physical interest.
