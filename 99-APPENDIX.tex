@@ -2,6 +2,31 @@
 
 The figures in this appendix supplement those in the main text. Figures already shown in the Results section are not repeated here.
 
+\subsection*{VQE Algorithm}
+
+\Cref{alg:vqe} gives a self-contained description of the VQE procedure as implemented in this project. All source code is available in the project repository \parencite{fys5419-repo}.
+
+\begin{algorithm}[H]
+\caption{Variational Quantum Eigensolver (VQE)}
+\label{alg:vqe}
+\begin{algorithmic}[1]
+\Require Hamiltonian $\mathcal{H} = \sum_k c_k P_k$, ansatz $U(\boldsymbol{\theta})$, initial parameters $\boldsymbol{\theta}_0$
+\Ensure Approximate ground state energy $E_{\mathrm{VQE}}$
+\State Decompose $\mathcal{H}$ into Pauli strings $\{P_k\}$ with real coefficients $\{c_k\}$
+\State Initialize $\boldsymbol{\theta} \leftarrow \boldsymbol{\theta}_0$
+\Repeat
+  \State Prepare trial state $\ket{\psi(\boldsymbol{\theta})} = U(\boldsymbol{\theta})\ket{0}^{\otimes n}$
+  \For{each Pauli term $P_k$}
+    \State Rotate to the appropriate measurement basis
+    \State Evaluate expectation value $\langle P_k \rangle_{\boldsymbol{\theta}}$
+  \EndFor
+  \State Compute energy $E(\boldsymbol{\theta}) = \sum_k c_k \langle P_k \rangle_{\boldsymbol{\theta}}$
+  \State Update $\boldsymbol{\theta}$ via classical optimizer (BFGS / L-BFGS-B)
+\Until{$|E(\boldsymbol{\theta}_{t+1}) - E(\boldsymbol{\theta}_t)| < \epsilon_{\mathrm{tol}}$}
+\State \Return $E_{\mathrm{VQE}} = E(\boldsymbol{\theta}^{\ast})$
+\end{algorithmic}
+\end{algorithm}
+
 % ---------- Part C (supplementary) ----------
 \subsection*{Part C: Additional VQE diagnostics for the two-level model}
 
