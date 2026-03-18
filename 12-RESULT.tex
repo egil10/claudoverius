@@ -203,29 +203,27 @@ The hardware-efficient ansatz consists of two $R_y$ rotation layers separated by
 
 This gives $4$ variational parameters. The $R_y$ rotations span the real subspace of each qubit, and the CNOT provides the entanglement needed to represent correlated states. For a $4$-dimensional real Hilbert space, $4$ real parameters are sufficient. 
 
-The VQE sweep over $\lambda\in[0,1]$ compares three approaches, in \cref{fig:part-e_vqe_comparison}, where all three curves, exact, VQE, and Qiskit VQE, are indistinguishable. With the precision, the max absolute error for manual VQE and Qiskit VQE are both $\approx 10^{-10}$. 
+The VQE sweep over $\lambda\in[0,1]$ compares three approaches in \cref{fig:part-e_vqe_comparison}. For $\lambda\lesssim0.4$ all three curves are indistinguishable, with errors at machine precision as shown in \cref{fig:part-e_vqe_precision}. At $\lambda\approx0.4$ the exact ground state energy reaches a peak of $\approx1.1$ and then drops sharply, falling to $\approx{-1.3}$ at $\lambda=1$. Both VQE implementations, however, continue upward past the crossing, reaching $\approx2.5$ at $\lambda=1$ — the same trajectory as the first excited state.
 
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=\linewidth]{figures/part-e_vqe_comparison.pdf}
-    \caption{Ground state energy as a function of $\lambda$ for three approaches: exact diagonalization, manual VQE, and Qiskit VQE. All three curves are indistinguishable.}
+    \caption{Ground state energy as a function of $\lambda$ for three approaches: exact diagonalization, manual VQE, and Qiskit VQE. All three agree for $\lambda\lesssim0.4$. After the avoided crossing at $\lambda\approx0.4$ the exact ground state drops sharply while both VQE methods continue along the upper (excited-state) branch.}
     \label{fig:part-e_vqe_comparison}
 \end{figure}
 
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=\linewidth]{figures/part-e_vqe_precision.pdf}
-    \caption{Absolute error between VQE and exact diagonalization for the two-qubit model, with a maximum of $\approx10^{-10}$ across the full $\lambda$ range.}
+    \caption{Absolute error of both VQE implementations relative to exact diagonalization. Below $\lambda\approx0.4$ errors remain at machine precision ($10^{-14}$--$10^{-11}$). At the crossing the error jumps by twelve orders of magnitude and plateaus at $\approx10^{-1}$ for all $\lambda>0.4$, with both implementations failing identically.}
     \label{fig:part-e_vqe_precision}
 \end{figure}
 
-The $R_y$-CNOT-$R_y$ circuit can represent any real two-qubit state. This means the VQE achieves exact results, the error is purely from the optimizer, not the ansatz. 
+The failure is a branch-tracking problem. The $R_y$-CNOT-$R_y$ ansatz is in principle exactly expressive for any real two-qubit state — the ansatz itself is not the limitation. The issue is that BFGS, initialized from $\boldsymbol{\theta}=\mathbf{0}$ at each $\lambda$ value, follows the energy landscape continuously. Before the crossing it finds the true ground state reliably. At the crossing the optimizer has no mechanism to detect that the lower branch has switched character; it stays on the branch it has been tracking, which becomes the first excited state for $\lambda>0.4$.
 
-BFGS converges reliably from the zero-parameter initialization $\theta=(0,0,0,0)$. No random restarts were needed, suggesting a smooth optimization landscape for this system. 
+The fact that both the manual and Qiskit implementations produce identical errors throughout — including in the failure regime — is itself a meaningful result. It rules out a code defect in either implementation and confirms that the breakdown is a systematic consequence of the optimization strategy, not an artifact. Both implementations correctly handle the ansatz, Pauli measurements, and optimization loop; they simply make the same physically motivated mistake at the same crossing point.
 
-The exact match between the manual implementation and Qiskit validates the VQE-code, both correctly handle the ansatz, Pauli measurements, and optimization loop.
-
-The VQE implicitly captures the entanglement structure of the ground state: as $\lambda$ increases through the crossing region, the optimal $R_y$ rotation angles shift so that the CNOT gate produces the appropriate degree of entanglement, consistent with the entropy growth tracked in the first part of this subsection. 
+For $\lambda\lesssim0.4$, where the VQE does track the ground state, the entanglement structure is correctly captured: as $\lambda$ increases toward the crossing the optimal rotation angles shift so that the CNOT produces increasing entanglement, consistent with the entropy growth in \cref{fig:part-d_entropy}. This correspondence breaks down past the crossing, where the VQE state corresponds to the first excited state rather than the ground state.
 
 \subsection{The Lipkin Model}
 \label{subsec:lipkin-model}
@@ -343,7 +341,7 @@ For the $J=2$ system the residual error of $\approx10^{-2}$ is substantially lar
 
 Second, the error is not uniform across the $V$ range: it grows near the phase transition at $V_c\approx0.333$, where the ground state character changes rapidly and the energy landscape becomes flat around the crossing point. Near-flat landscapes cause gradient-based optimizers to stall, leading to poor convergence in exactly the regime of greatest physical interest.
 
-Third, with $16$ parameters and a circuit of depth $4$, the optimization landscape exhibits the signatures of the barren plateau problem — gradients of the cost function become exponentially small in regions of parameter space that are far from the solution, making it difficult for gradient-based methods to find a productive direction. The four random restarts partially compensate for this, but they are not sufficient to guarantee global convergence in all cases.
+Third, with $16$ parameters and a circuit of depth $4$, the optimization landscape exhibits the signatures of the barren plateau problem \parencite{mcclean2018barren} — gradients of the cost function become exponentially small in regions of parameter space that are far from the solution, making it difficult for gradient-based methods to find a productive direction. The four random restarts partially compensate for this, but they are not sufficient to guarantee global convergence in all cases.
 
 Both systems capture the qualitative behavior of the phase transition: the ground state energy decreases with increasing $V$, and the transition from weak to strong coupling is reflected in a change in the rate of energy decrease. The Hartree-Fock approximation correctly predicts the ground state below the critical coupling but underestimates correlation energy above it, consistent with the scaling analysis in \cref{fig:part-f_scaling}.
 
