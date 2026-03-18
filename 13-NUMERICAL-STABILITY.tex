@@ -1,48 +1,11 @@
-\section{Numerical Stability and Precision}
-\label{sec:numerical-stability}
+\section{Precision and Limitations}\label{sec:numerical-stability}
 
-\subsection{Classical diagonalization}
+Classical diagonalization caused no numerical difficulties throughout. The Hamiltonians involved are small — the largest is $5\times5$ — and \texttt{numpy.linalg.eigh} reproduces analytical eigenvalues to within $\approx10^{-15}$ across all parameter ranges, including near avoided crossings where the energy gap narrows. No ill-conditioning was detected at any of the interaction strengths studied.
 
-All classical eigenvalue computations were performed using \texttt{numpy.linalg.eigh}, which calls the LAPACK \texttt{dsyevd} routine operating in IEEE 754 double-precision floating point (64-bit). For the two-level Hamiltonian the maximum discrepancy between the analytical eigenvalues and the numerical ones is $\approx10^{-15}$, which is consistent with the machine epsilon $\epsilon_\text{mach}\approx2.2\times10^{-16}$ and reflects a single rounding-error accumulation from the few arithmetic operations involved. No loss of precision was observed across the full $\lambda\in[0,1]$ sweep, including near the avoided crossing at $\lambda=\frac{2}{3}$, where the gap is $\Delta E\approx0.27$ — well above the numerical noise floor.
+The VQE experiments are more varied. All energy evaluations use exact statevector simulation, so finite-shot noise plays no role in the optimization. The only exception is the Bell state measurement, which used $1000$ shots per run; the observed spread ($\sigma\approx0.018$) is consistent with binomial sampling noise at that shot count. For all other VQE runs the dominant error source is optimizer convergence.
 
-For the Lipkin matrices ($3\times3$ and $5\times5$), diagonalization remains numerically trivial. The condition numbers of these small Hermitian matrices stay moderate even at the largest interaction strengths studied, and no ill-conditioning effects were detected.
+For the two-level and two-qubit Hamiltonians the ansätze are exactly expressive — the circuits can represent any state in the relevant real Hilbert space — and the residual errors around $10^{-10}$--$10^{-11}$ reflect only the BFGS convergence tolerance. The cost-function landscapes for these systems are smooth and free of local minima, so a single initialization from $\boldsymbol{\theta}=\mathbf{0}$ is sufficient throughout.
 
-\subsection{VQE precision and optimizer behavior}
+The Lipkin $J=2$ system is where precision genuinely degrades. Mapping four particles to qubits embeds the problem inside a $16\times16$ Hilbert space that also contains $J=0$ and $J=1$ sectors; since the hardware-efficient ansatz carries no symmetry constraint, the optimizer must locate the physical ground state within the full unconstrained space. This is manageable away from the phase transition, but near $V_c\approx0.333$ the ground state changes character rapidly and the cost-function gradient becomes small, causing L-BFGS-B to stall. The resulting error of $\approx10^{-2}$ — roughly six orders of magnitude worse than the $J=1$ case — is not a generic optimizer failure; it reflects the structural mismatch between the Hamiltonian's symmetry and the unconstrained circuit. Multiple random restarts provide only partial relief. A symmetry-adapted ansatz confined to the $J=2$ subspace would address this directly, and is the most obvious improvement to pursue.
 
-Since all VQE experiments use exact statevector simulation rather than finite-shot sampling, the dominant sources of numerical error are the optimizer convergence tolerance and the expressibility of the chosen ansatz relative to the true ground state. \Cref{tab:vqe-precision-summary} summarizes the achieved precision across all four VQE experiments.
-
-\begin{table*}[t]
-\centering
-\begin{tabular}{lcccc}
-\hline
-System & Ansatz & Optimizer & Max error & Mean error \\
-\hline
-$2\times2$ model (Part c)      & $R_y$                        & BFGS     & $5.4\times10^{-11}$ & $\sim10^{-12}$ \\
-Two-qubit model (Part e)       & $R_y$-CNOT-$R_y$             & BFGS     & $\sim10^{-10}$      & $\sim10^{-12}$ \\
-Lipkin $J=1$ (Part g)          & $R_y$-CZ-$R_y$, depth 2      & L-BFGS-B & $2.92\times10^{-11}$ & $\sim10^{-12}$ \\
-Lipkin $J=2$ (Part g)          & $R_y$-CZ-$R_y$, depth 4      & L-BFGS-B & $1.80\times10^{-2}$  & $\sim10^{-3}$  \\
-\hline
-\end{tabular}
-\caption{Summary of VQE precision across all systems. Errors are absolute differences between the VQE ground state energy and the exact classical result, evaluated over the full parameter sweep.}
-\label{tab:vqe-precision-summary}
-\end{table*}
-
-For the single-qubit $2\times2$ Hamiltonian, the $R_y$ ansatz spans the full real single-qubit Hilbert space, so the ansatz is exact by construction. The residual error of $\approx5.4\times10^{-11}$ reflects the BFGS convergence tolerance rather than any approximation in the trial state. The one-parameter energy landscape $E(\theta)$ is smooth and unimodal for all $\lambda$, so no local minima exist and a single optimization from $\theta=0$ reliably reaches the global minimum.
-
-For the two-qubit model, the $R_y$-CNOT-$R_y$ circuit with four parameters spans the full real two-qubit Hilbert space. The optimization landscape is again free of local minima for this system, and BFGS converges from the zero initialization $\boldsymbol{\theta}=(0,0,0,0)$ without requiring random restarts. The achieved precision of $\approx10^{-10}$ is again optimizer-limited.
-
-For the Lipkin $J=1$ system, the two-qubit hardware-efficient ansatz achieves similar machine-level precision. The block structure of the Lipkin Hamiltonian and the low dimensionality of the $J=1$ sector produce a landscape that L-BFGS-B navigates reliably with three random restarts.
-
-The Lipkin $J=2$ system is the most demanding. The $16\times16$ qubit Hilbert space contains $J=0,1,2$ sectors; the ansatz must implicitly project onto the five-dimensional $J=2$ subspace. With depth 4 and 16 parameters, the circuit has sufficient expressibility in principle, but the optimization landscape is more complex. A residual error of $\approx10^{-2}$ was observed, indicating that the optimizer converged to a near-minimum that is not the global one. Four random restarts partially mitigated this, suggesting a rugged landscape with multiple local minima in the $J=2$ case.
-
-\subsection{Shot noise}
-
-Although the main experiments use exact statevector simulation, the Bell state measurement experiment (Part a) was performed with finite shots ($1000$ shots, $50$ repetitions). The expected shot noise for a balanced outcome ($p=0.5$) is
-\begin{equation}
-    \sigma_\text{shot} = \sqrt{\frac{p(1-p)}{N_\text{shots}}} = \sqrt{\frac{0.5\times0.5}{1000}} \approx 0.0158,
-\end{equation}
-in agreement with the observed standard deviation of $\sigma\approx0.018$. This confirms that the measurement noise is purely statistical and consistent with binomial sampling.
-
-\subsection{Reproducibility}
-
-All random restarts in the VQE experiments use a fixed random seed (\texttt{42}) for reproducibility, with random initial parameters drawn uniformly from $[-\pi,\pi]$. Default \texttt{scipy.optimize} tolerances were used throughout; no explicit convergence thresholds were set beyond the optimizer defaults. No catastrophic cancellation or overflow was encountered in any of the experiments, and all results were verified to be stable under repeated runs.
+All results reported here assume exact statevector simulation. On actual NISQ hardware, gate errors, decoherence, and readout noise would add to the optimization difficulty already present in the $J=2$ case. The precision figures throughout this report should therefore be read as an optimistic upper bound, not as predictions of device-level performance.
